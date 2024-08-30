@@ -37,7 +37,7 @@ class AbnormalEnvironment(
             Result.SUSPICIOUS else Result.NOT_FOUND )
         add(Pair("Xposed Edge", detectFile("/data/system/xedge")))
         add(Pair("Riru Clipboard", detectFile("/data/misc/clipboard")))
-        add(Pair("隐秘空间", detectFile("/data/system/cn.geektang.privacyspace")))
+        add(Pair("privacyspace", detectFile("/data/system/cn.geektang.privacyspace")))
         var sufilenum=0
         var busyboxnum=0
         var magisknum=0

@@ -135,101 +135,72 @@ private fun AboutDialog(onDismiss: () -> Unit) {
 }
 
 fun gettext(string: String): Array<String> {
-    when(string){
-        "not_found" -> {
-            return arrayOf(appContext.getString(R.string.not_found))
-        }
-        "method" -> {
-            return arrayOf(appContext.getString(R.string.method))
-        }
-        "suspicious" -> {
-            return arrayOf(appContext.getString(R.string.suspicious))
-        }
-        "found" -> {
-            return arrayOf(appContext.getString(R.string.found))
-        }
-        "abnormal" -> {
-            return arrayOf(appContext.getString(R.string.abnormal))
-        }
-        "filedet" -> {
-            return arrayOf(appContext.getString(R.string.filedet))
-        }
-        "pmc" -> {
-            return arrayOf(appContext.getString(R.string.pmc))
-        }
-        "pmca" -> {
-            return arrayOf(appContext.getString(R.string.pmca))
-        }
-        "pmsa" -> {
-            return arrayOf(appContext.getString(R.string.pmsa))
-        }
-        "pmiq" -> {
-            return arrayOf(appContext.getString(R.string.pmiq))
-        }
-        "xposed" -> {
-            return arrayOf(appContext.getString(R.string.xposed))
-        }
-        "lspatch" -> {
-            return arrayOf(appContext.getString(R.string.lspatch))
-        }
-        "magisk" -> {
-            return arrayOf(appContext.getString(R.string.magisk))
-        }
-        "accessibility" -> {
-            return arrayOf(appContext.getString(R.string.accessibility))
-        }
-        "settingprops" -> {
-            return appContext.resources.getStringArray(R.array.settingprops)
-        }
-        "account" -> {
-            return arrayOf(appContext.getString(R.string.account))
-        }
-        else -> {
-            return arrayOf("none")
-        }
+    return when (string) {
+        "not_found" -> arrayOf(appContext.getString(R.string.not_found))
+        "method" -> arrayOf(appContext.getString(R.string.method))
+        "suspicious" -> arrayOf(appContext.getString(R.string.suspicious))
+        "found" -> arrayOf(appContext.getString(R.string.found))
+        "abnormal" -> arrayOf(appContext.getString(R.string.abnormal))
+        "filedet" -> arrayOf(appContext.getString(R.string.filedet))
+        "pmc" -> arrayOf(appContext.getString(R.string.pmc))
+        "pmca" -> arrayOf(appContext.getString(R.string.pmca))
+        "pmsa" -> arrayOf(appContext.getString(R.string.pmsa))
+        "pmiq" -> arrayOf(appContext.getString(R.string.pmiq))
+        "xposed" -> arrayOf(appContext.getString(R.string.xposed))
+        "lspatch" -> arrayOf(appContext.getString(R.string.lspatch))
+        "magisk" -> arrayOf(appContext.getString(R.string.magisk))
+        "accessibility" -> arrayOf(appContext.getString(R.string.accessibility))
+        "settingprops" -> appContext.resources.getStringArray(R.array.settingprops)
+        "account" -> arrayOf(appContext.getString(R.string.account))
+        else -> arrayOf("none")
     }
 }
 
 
 private fun checkDisabled() {
-    MyApplication.accList = getFromAccessibilityManager()+getFromSettingsSecure()
+    MyApplication.accList = getFromAccessibilityManager()+ getFromSettingsSecure()
 }
 
 private fun getFromAccessibilityManager(): List<String> {
-    val accessibilityManager =
-        ContextCompat.getSystemService(appContext, AccessibilityManager::class.java)
-            ?: error("unreachable")
-    val serviceList: List<AccessibilityServiceInfo> =
-        accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
-            ?: emptyList()
-    val nameList = serviceList.map {
-        appContext.packageManager.getApplicationLabel(it.resolveInfo.serviceInfo.applicationInfo)
-            .toString()
-    }.toMutableList()
-    if (accessibilityManager.isEnabled) {
-        nameList.add("AccessibilityManager.isEnabled")
-    }
-    if (accessibilityManager.isTouchExplorationEnabled) {
-        nameList.add("AccessibilityManager.isTouchExplorationEnabled")
-    }
-    return nameList
+        val accessibilityManager =
+            ContextCompat.getSystemService(appContext, AccessibilityManager::class.java)
+                ?: error("unreachable")
+        val serviceList: List<AccessibilityServiceInfo> =
+            accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+                ?: emptyList()
+        val nameList = serviceList.map {
+            appContext.packageManager.getApplicationLabel(it.resolveInfo.serviceInfo.applicationInfo)
+                .toString()
+        }.toMutableList()
+        if (accessibilityManager.isEnabled) {
+            nameList.add("AccessibilityManager.isEnabled")
+        }
+        if (accessibilityManager.isTouchExplorationEnabled) {
+            nameList.add("AccessibilityManager.isTouchExplorationEnabled")
+        }
+        return nameList
 }
 
 private fun getFromSettingsSecure():List<String> {
-    val settingValue= Settings.Secure.getString(
-        appContext.contentResolver,
-        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-    )
-    val nameList=if (settingValue.isNullOrEmpty()){
-        emptyList()
-    }else{
-        settingValue.split(':')
-    }.toMutableList()
-    val enabled = Settings.Secure.getInt(appContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
-    if (enabled != 0) {
-        MyApplication.accenable =true
+    try {
+        val settingValue= Settings.Secure.getString(
+            appContext.contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        val nameList=if (settingValue.isNullOrEmpty()){
+            emptyList()
+        }else{
+            settingValue.split(':')
+        }.toMutableList()
+        val enabled = Settings.Secure.getInt(appContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
+        if (enabled != 0) {
+            MyApplication.accenable =true
+        }
+        return nameList
+    }catch (e:Settings.SettingNotFoundException){
+        return emptyList()
     }
-    return nameList
+
 }
 
 
@@ -241,33 +212,16 @@ fun checkSetting() {
                 )){ MyApplication.adbenable=true }
 
     try {
-        val nilist = NetworkInterface.getNetworkInterfaces()
-    if (nilist!=null){
-        for (obj in Collections.list(nilist)){
-            val intf:NetworkInterface=obj
-            if (!intf.isUp()||intf.interfaceAddresses.size==0) {
-                continue
-            }
-            if ("tun0".equals(intf.name) || "ppp0".equals(intf.name)){
-                vpn_connect=true
-            }
-            try {
-                val conMgr= appContext.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-                if (conMgr.getNetworkInfo(17)?.isConnectedOrConnecting == true
-                    || conMgr.getNetworkInfo(17)?.isConnectedOrConnecting ==null) vpn_connect=true
-
-            } catch (e: Exception) {
-            }
-        }
-    }
-    }catch (e:Throwable){
-        e.printStackTrace()
-    }
+        vpn_connect = NetworkInterface.getNetworkInterfaces()?.toList()?.any { it.isUp && it.interfaceAddresses.isNotEmpty() && (it.name == "tun0" || it.name == "ppp0") } == true ||
+                (appContext.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager).getNetworkInfo(17)?.isConnectedOrConnecting == true ||
+                (!System.getProperty("http.proxyHost").isNullOrEmpty() && (System.getProperty("http.proxyPort")?.toIntOrNull() ?: -1) != -1)
+    } catch (e: Throwable) { e.printStackTrace() }
 }
 
 
 fun Accounts() {
     try{
+        accountList= listOf()
         val accounts = AccountManager.get(appContext).getAccounts()
         var mutableList: MutableList<String> = mutableListOf()
         if (accounts.size>0) {

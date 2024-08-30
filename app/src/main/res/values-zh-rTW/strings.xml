@@ -8,7 +8,7 @@
     <string name="not_found">未發現</string>
     <string name="found">發現</string>
     <string name="method">被拒絕</string>
-    <string name="suspicious">可疑</string>
+    <string name="suspicious">可疑/泄露隐私</string>
     <string name="abnormal">環境檢測</string>
     <string name="filedet">檔案檢查</string>
     <string name="pmc">PM 命令查詢</string>
@@ -24,6 +24,6 @@
         <item>設置屬性</item>
         <item>已開啓開發者選項</item>
         <item>已開啓usb調試</item>
-        <item>已鏈接vpn服務</item>
+        <item>已鏈接VPN服務/HTTP代理</item>
     </string-array>
 </resources>
