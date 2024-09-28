@@ -32,7 +32,15 @@ val basicAppList = listOf(
     "me.weishu.exp",
     "com.tsng.hidemyapplist",
     "cn.geektang.privacyspace",
-    "moe.shizuku.redirectstorage"
+    "moe.shizuku.redirectstorage",
+    "me.bmax.apatch",
+    "me.weishu.kernelsu",
+    "io.github.vvb2060.mahoshojo",
+    "com.zhenxi.hunter",
+    "icu.nullptr.nativetest",
+    "github.tornaco.android.thanos",
+    "com.omarea.vtools",
+    "com.sevtinge.hyperceiler"
 )
 
 val snapShotList = mutableStateListOf<Triple<IDetector, IDetector.Result?, Detail?>>(
