@@ -34,18 +34,11 @@ android {
         versionName = verName
     }
 
-    val config = properties.getProperty("fileDir")?.let {
-        signingConfigs.create("config") {
-            storeFile = file(it)
-            storePassword = properties.getProperty("storePassword")
-            keyAlias = properties.getProperty("keyAlias")
-            keyPassword = properties.getProperty("keyPassword")
-        }
-    }
+
 
     buildTypes {
         all {
-            signingConfig = config ?: signingConfigs["debug"]
+            signingConfig = null
         }
         release {
             isMinifyEnabled = true
