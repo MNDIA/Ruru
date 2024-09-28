@@ -5,9 +5,6 @@ plugins {
     kotlin("android")
 }
 
-val properties = Properties()
-properties.load(rootProject.file("local.properties").inputStream())
-
 val verCode: Int by rootProject.extra
 val verName: String by rootProject.extra
 
